@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='cpte',
     packages=['cpte'],  # this must be the same as the name above
-    version='0.0.1',
+    version='0.0.2',
     description='Set of classes for rapid development of Conan packages',
     author='Fluendo',
     author_email='mjimeno@fluendo.com',
