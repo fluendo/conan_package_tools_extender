@@ -8,7 +8,6 @@ class ConanFileMeson(ConanFile):
     url = 'https://github.com/fluendo/fluendo-conan'
     author = 'Fluendo'
     generators = ('cmake', 'pkg_config')
-    short_paths = True
 
     _builder = None
     _git_url = None
@@ -18,6 +17,7 @@ class ConanFileMeson(ConanFile):
     _requires = []
     _build_requires = []
     _use_sudo = False
+    _meson_backend = 'Ninja'
 
     @property
     def _source_subfolder(self):
@@ -38,7 +38,7 @@ class ConanFileMeson(ConanFile):
     def _configure_builder(self):
         if self._builder:
             return self._builder
-        self._builder = Meson(self)
+        self._builder = Meson(self, backend=_meson_backend)
         self._builder.configure(source_folder=self._source_subfolder, build_folder=self._build_subfolder,
                                 defs=self._defs, args=self._args)
         return self._builder
