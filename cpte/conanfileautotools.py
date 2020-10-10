@@ -3,12 +3,11 @@ from .conanfilemeson import ConanFileMeson
 
 
 class ConanFileAutoTools(ConanFileMeson):
+    _autogen_command = 'NOCONFIGURE=1 ./autogen.sh'
+
     def _configure_builder(self):
         if self._builder:
             return self._builder
-
-        with tools.chdir(self._source_subfolder):
-            self.run('NOCONFIGURE=1 ./autogen.sh -fi')
 
         if self._args:
             args = self._args
@@ -21,7 +20,9 @@ class ConanFileAutoTools(ConanFileMeson):
             args.extend(['--disable-shared', '--enable-static'])
 
         self._builder = AutoToolsBuildEnvironment(self)
-        self._builder.configure(args=self._args, configure_dir=self._source_subfolder)
+        self.run(self._autogen_command)
+        self._builder.configure(args=self._args)
+
         return self._builder
 
     def build(self):
