@@ -3,12 +3,12 @@ from distutils.core import setup
 setup(
     name='cpte',
     packages=['cpte'],  # this must be the same as the name above
-    version='0.0.4',
+    version='0.0.5',
     description='Set of classes for rapid development of Conan packages',
     author='Fluendo',
     author_email='mjimeno@fluendo.com',
     url='https://github.com/fluendo/conan_package_tools_extender',  # use the URL to the github repo
-    download_url='https://github.com/fluendo/conan_package_tools_extender/tarball/0.0.4',
+    download_url='https://github.com/fluendo/conan_package_tools_extender/tarball/0.0.5',
     keywords=['conan', 'builder'],
     classifiers=[
         "Programming Language :: Python :: 3",
