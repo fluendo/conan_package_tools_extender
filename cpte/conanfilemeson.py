@@ -47,9 +47,9 @@ class ConanFileMeson(ConanFile):
         root = self.deps_cpp_info[name].rootpath
         pc_dir = os.path.join(root, 'lib', 'pkgconfig')
         pc_files = glob.glob('{}/*.pc'.format(pc_dir))
-        self.output.warn('Copy .pc files to {}'.format(os.getcwd()))
+        self.output.warn('Copy .pc files from {} to {}'.format(root, os.getcwd()))
         if not pc_files:  # maybe it's stored in .pc at root
-            pc_files = glob.glob('{}/*.pc' % root)
+            pc_files = glob.glob('{}/**/*.pc'.format(root), recursive=True)
         for pc_name in pc_files:
             new_pc = os.path.basename(pc_name)
             self.output.warn('\tcopy {}'.format(os.path.basename(pc_name)))
