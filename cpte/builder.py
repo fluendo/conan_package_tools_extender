@@ -61,6 +61,8 @@ def _load_tools(tools_info):
 class Builder(object):
     _config_data = None
     _shared_settings = None
+    _shared_options = None
+    _shared_platform = None
     _remote = None
     _remote_user = None
     _remote_password = None
@@ -70,7 +72,17 @@ class Builder(object):
         self._config_data = _load_yaml(data_path)
         if not self._config_data:
             raise ConanException('Invalid yml format at {}, don''t exists '.format(data_path))
-        self._shared_settings = self._config_data['shared_setting'][platform.system()]
+        
+        if 'shared_settings' in self._config_data:
+            self._shared_settings = self._config_data['shared_settings']
+        if 'shared_setting' in self._config_data:
+            self._shared_settings = self._config_data['shared_setting']
+        if self._shared_settings:
+            if platform.system() in self._shared_settings:
+                self._shared_platform = self._shared_settings[platform.system()]           
+            if 'options' in self._shared_settings:
+                self._shared_options = self._shared_settings['options']
+
         print('Loading the {} configuration file '.format(data_path))
 
     def system(self):
@@ -95,7 +107,7 @@ class Builder(object):
             self.build_package(packages_section[item])
 
     def build_package(self, package_section):
-        settings = self._shared_settings['settings']['settings']
+        settings = self._shared_platform['settings']['settings']
         options = {}
         env_vars = {}
         build = package_section['package']
@@ -105,11 +117,10 @@ class Builder(object):
         if 'options' in package_section:
             options = package_section['options']
         else:
-            if 'options' in self._shared_settings:
-                options = self._shared_settings['options']
+            options = self._shared_options
 
-        if 'env_vars' in self._shared_settings:
-            env_vars = self._shared_settings['env_vars']
+        if 'env_vars' in self._shared_platform:
+            env_vars = self._shared_platform['env_vars']
 
         if 'build_requires' in package_section:
             build_requires = package_section['build_requires']
@@ -131,7 +142,7 @@ class Builder(object):
                                       password=self._remote_password,
                                       upload=self._remote)
 
-        for build_type in self._shared_settings['settings']['build_type']:
+        for build_type in self._shared_platform['settings']['build_type']:
             if len(local_build_type) == 0 or build_type in local_build_type:
                 settings['build_type'] = build_type
                 packager.add(settings.copy(), options=options, build_requires=build_requires)

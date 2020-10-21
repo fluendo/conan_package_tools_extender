@@ -9,10 +9,7 @@ class ConanFileAutoTools(ConanFileMeson):
         if self._builder:
             return self._builder
 
-        if self._args:
-            args = self._args
-        else:
-            args = []
+        args = self._args or []
 
         if self.options.shared:
             args.extend(['--disable-static', '--enable-shared'])
@@ -21,7 +18,7 @@ class ConanFileAutoTools(ConanFileMeson):
 
         self._builder = AutoToolsBuildEnvironment(self)
         self.run(self._autogen_command)
-        self._builder.configure(args=self._args)
+        self._builder.configure(args=args)
 
         return self._builder
 
